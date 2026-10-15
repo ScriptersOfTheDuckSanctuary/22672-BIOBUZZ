@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "GO STRAIGHT FORWARD", group = "BIOBUZZ")
-public class AutoLeft extends LinearOpMode {
+public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
