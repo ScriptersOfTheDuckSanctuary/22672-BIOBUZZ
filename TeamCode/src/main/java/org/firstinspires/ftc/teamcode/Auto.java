@@ -39,14 +39,14 @@ public class Auto extends LinearOpMode {
         if (opModeIsActive()) {
 
             // ---------------------------
-            // Drive forward for 3 seconds
+            // Drive forward for 1 seconds
             // ---------------------------
             motorFL.setPower(1.0);
             motorFR.setPower(1.0);
             motorBL.setPower(1.0);
             motorBR.setPower(1.0);
 
-            sleep(3000);
+            sleep(1000);
 
             // ---------------------------
             // Stop motors
