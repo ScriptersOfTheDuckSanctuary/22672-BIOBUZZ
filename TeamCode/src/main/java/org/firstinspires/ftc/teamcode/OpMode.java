@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
+//import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -15,8 +15,8 @@ public class OpMode extends LinearOpMode {
 
     // Hardware
     DcMotor motorFL, motorFR, motorBL, motorBR;
-    DcMotor shooterL;
-    DcMotor shooterR;
+    //DcMotor shooterL;
+    //DcMotor shooterR;
     IMU imu;
 
     //AprilTagProcessor aprilTag;
@@ -24,8 +24,8 @@ public class OpMode extends LinearOpMode {
 
     // Subsystems
     DriveSubsystem drive;
-    IntakeSubsystem intakeSystem;
-    ShooterSubsystem shooterSystem;
+    //IntakeSubsystem intakeSystem;
+    //ShooterSubsystem shooterSystem;
 
     @Override
     public void runOpMode() {
@@ -37,10 +37,10 @@ public class OpMode extends LinearOpMode {
         motorFR = hardwareMap.get(DcMotor.class, "motorFR");
         motorBL = hardwareMap.get(DcMotor.class, "motorBL");
         motorBR = hardwareMap.get(DcMotor.class, "motorBR");
-        shooterL = hardwareMap.get(DcMotor.class, "shooterL");
-        shooterR = hardwareMap.get(DcMotor.class, "shooterR");
+        //shooterL = hardwareMap.get(DcMotor.class, "shooterL");
+        //shooterR = hardwareMap.get(DcMotor.class, "shooterR");
 
-        CRServo intake = hardwareMap.get(CRServo.class, "Intake");
+        //CRServo intake = hardwareMap.get(CRServo.class, "Intake");
 
 
         motorFL.setDirection(DcMotor.Direction.REVERSE);
@@ -48,8 +48,8 @@ public class OpMode extends LinearOpMode {
         motorBL.setDirection(DcMotor.Direction.REVERSE);
         motorBR.setDirection(DcMotor.Direction.FORWARD);
 
-        shooterL.setDirection(DcMotor.Direction.REVERSE);
-        shooterR.setDirection(DcMotor.Direction.FORWARD);
+        //shooterL.setDirection(DcMotor.Direction.REVERSE);
+        //shooterR.setDirection(DcMotor.Direction.FORWARD);
 
         // IMU
         imu = hardwareMap.get(IMU.class, "imu");
@@ -76,8 +76,8 @@ public class OpMode extends LinearOpMode {
         // Initialize Subsystems
         // ---------------------------
         drive = new DriveSubsystem(motorFL, motorFR, motorBL, motorBR, imu);
-        intakeSystem = new IntakeSubsystem(intake);
-        shooterSystem = new ShooterSubsystem(shooterL, shooterR);
+        //intakeSystem = new IntakeSubsystem(intake);
+        //shooterSystem = new ShooterSubsystem(shooterL, shooterR);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -99,8 +99,8 @@ public class OpMode extends LinearOpMode {
             drive.driveFieldCentric(y, x, rotation, gamepad1);
 
             // Intake & Shooter
-            intakeSystem.handleIntake(gamepad2);
-            shooterSystem.handleShooter(gamepad2);
+            //intakeSystem.handleIntake(gamepad2);
+            //shooterSystem.handleShooter(gamepad2);
 
             // Telemetry
             telemetry.update();
@@ -159,7 +159,7 @@ public class OpMode extends LinearOpMode {
         }
     }
 
-    private static class IntakeSubsystem {
+    /*private static class IntakeSubsystem {
         private final CRServo intake;
 
         public IntakeSubsystem(CRServo intake) {
@@ -192,5 +192,5 @@ public class OpMode extends LinearOpMode {
             shooterL.setPower(power);
             shooterR.setPower(power);
         }
-    }
+    }*/
 }
