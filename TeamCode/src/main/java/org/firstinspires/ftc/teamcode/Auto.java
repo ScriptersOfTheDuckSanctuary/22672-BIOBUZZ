@@ -1,4 +1,4 @@
-﻿package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 // ---------------------------
 // Import Statements
@@ -30,6 +30,17 @@ public class Auto extends LinearOpMode {
         motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // AprilTag
+        /*aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagOutline(true)
+                .build();
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .build();*/
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

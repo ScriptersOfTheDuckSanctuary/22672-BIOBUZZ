@@ -61,17 +61,6 @@ public class OpMode extends LinearOpMode {
         );
         imu.initialize(parameters);
 
-        // AprilTag
-        /*aprilTag = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagOutline(true)
-                .build();
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .build();*/
-
         // ---------------------------
         // Initialize Subsystems
         // ---------------------------
