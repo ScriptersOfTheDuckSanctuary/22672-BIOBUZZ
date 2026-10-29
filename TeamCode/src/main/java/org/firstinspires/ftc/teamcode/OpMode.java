@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-//import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -17,7 +17,7 @@ public class OpMode extends LinearOpMode {
     DcMotor motorFL, motorFR, motorBL, motorBR;
     //DcMotor shooterL;
     //DcMotor shooterR;
-    //IMU imu;
+    IMU imu;
 
     //AprilTagProcessor aprilTag;
     //VisionPortal visionPortal;
@@ -42,7 +42,6 @@ public class OpMode extends LinearOpMode {
 
         //CRServo intake = hardwareMap.get(CRServo.class, "Intake");
 
-
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFR.setDirection(DcMotor.Direction.FORWARD);
         motorBL.setDirection(DcMotor.Direction.REVERSE);
@@ -51,15 +50,17 @@ public class OpMode extends LinearOpMode {
         //shooterL.setDirection(DcMotor.Direction.REVERSE);
         //shooterR.setDirection(DcMotor.Direction.FORWARD);
 
-        // IMU
-        /*imu = hardwareMap.get(IMU.class, "imu");
+        // ---------------------------
+        // IMU Initialization
+        // ---------------------------
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+
+        imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-                )
+                new RevHubOrientationOnRobot(logoDirection, usbDirection)
         );
-        imu.initialize(parameters);*/
+        imu.initialize(parameters);
 
         // ---------------------------
         // Initialize Subsystems
@@ -69,29 +70,38 @@ public class OpMode extends LinearOpMode {
         //shooterSystem = new ShooterSubsystem(shooterL, shooterR);
 
         telemetry.addData("Status", "Initialized");
+        telemetry.addData("Hub Orientation", "Logo: %s, USB: %s", logoDirection, usbDirection);
         telemetry.update();
 
         waitForStart();
-        imu.resetYaw();
+
+        if (opModeIsActive()) {
+            imu.resetYaw();
+        }
 
         while (opModeIsActive()) {
 
-            // Reset IMU if button A
-            if (gamepad1.a) imu.resetYaw();
+            // Reset IMU heading when button A or options is pressed
+            if (gamepad1.a || gamepad1.options) {
+                imu.resetYaw();
+            }
 
             // Apply deadzones to joystick values
             double y = -applyDeadzone(gamepad1.left_stick_y);
             double x = applyDeadzone(gamepad1.left_stick_x);
             double rotation = applyDeadzone(gamepad1.right_stick_x) * 0.5;
 
-            // Drive
-            drive.driveFieldCentric(y, x, rotation, gamepad1);
+            // Drive: default field-centric, hold left_bumper for robot-centric
+            boolean robotCentric = gamepad1.left_bumper;
+            drive.drive(y, x, rotation, gamepad1, robotCentric);
 
             // Intake & Shooter
             //intakeSystem.handleIntake(gamepad2);
             //shooterSystem.handleShooter(gamepad2);
 
             // Telemetry
+            telemetry.addData("Heading (deg)", "%.2f", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+            telemetry.addData("Drive Mode", robotCentric ? "Robot-Centric" : "Field-Centric");
             telemetry.update();
         }
 
@@ -111,21 +121,25 @@ public class OpMode extends LinearOpMode {
 
     private static class DriveSubsystem {
         DcMotor motorFL, motorFR, motorBL, motorBR;
-        //IMU imu;
+        IMU imu;
 
         public DriveSubsystem(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, IMU imu) {
             this.motorFL = fl;
             this.motorFR = fr;
             this.motorBL = bl;
             this.motorBR = br;
-            //this.imu = imu;
+            this.imu = imu;
         }
 
-        public void driveFieldCentric(double y, double x, double rotation, Gamepad gamepad) {
-            double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        public void drive(double y, double x, double rotation, Gamepad gamepad, boolean robotCentric) {
+            double rotX = x;
+            double rotY = y;
 
-            double rotX = x * Math.cos(heading) - y * Math.sin(heading);
-            double rotY = x * Math.sin(heading) + y * Math.cos(heading);
+            if (!robotCentric && imu != null) {
+                double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+                rotX = x * Math.cos(heading) - y * Math.sin(heading);
+                rotY = x * Math.sin(heading) + y * Math.cos(heading);
+            }
 
             double fl = rotY + rotX + rotation;
             double fr = rotY - rotX - rotation;
@@ -133,10 +147,10 @@ public class OpMode extends LinearOpMode {
             double br = rotY + rotX - rotation;
 
             // D-pad overrides
-            if (gamepad.dpad_left) { fl=-1; fr=1; bl=1; br=-1; }
-            else if (gamepad.dpad_right) { fl=1; fr=-1; bl=-1; br=1; }
-            else if (gamepad.dpad_up) { fl=fr=bl=br=1; }
-            else if (gamepad.dpad_down) { fl=fr=bl=br=-1; }
+            if (gamepad.dpad_left) { fl = -1; fr = 1; bl = 1; br = -1; }
+            else if (gamepad.dpad_right) { fl = 1; fr = -1; bl = -1; br = 1; }
+            else if (gamepad.dpad_up) { fl = fr = bl = br = 1; }
+            else if (gamepad.dpad_down) { fl = fr = bl = br = -1; }
 
             double max = Math.max(1.0, Math.max(Math.abs(fl),
                     Math.max(Math.abs(fr), Math.max(Math.abs(bl), Math.abs(br)))));
