@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.IMU;
+//import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -17,7 +17,7 @@ public class OpMode extends LinearOpMode {
     DcMotor motorFL, motorFR, motorBL, motorBR;
     //DcMotor shooterL;
     //DcMotor shooterR;
-    IMU imu;
+    //IMU imu;
 
     //AprilTagProcessor aprilTag;
     //VisionPortal visionPortal;
@@ -52,14 +52,14 @@ public class OpMode extends LinearOpMode {
         //shooterR.setDirection(DcMotor.Direction.FORWARD);
 
         // IMU
-        imu = hardwareMap.get(IMU.class, "imu");
+        /*imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
                         RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
                 )
         );
-        imu.initialize(parameters);
+        imu.initialize(parameters);*/
 
         // ---------------------------
         // Initialize Subsystems
@@ -111,14 +111,14 @@ public class OpMode extends LinearOpMode {
 
     private static class DriveSubsystem {
         DcMotor motorFL, motorFR, motorBL, motorBR;
-        IMU imu;
+        //IMU imu;
 
         public DriveSubsystem(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, IMU imu) {
             this.motorFL = fl;
             this.motorFR = fr;
             this.motorBL = bl;
             this.motorBR = br;
-            this.imu = imu;
+            //this.imu = imu;
         }
 
         public void driveFieldCentric(double y, double x, double rotation, Gamepad gamepad) {
